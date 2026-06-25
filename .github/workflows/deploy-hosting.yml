@@ -30,7 +30,7 @@ permissions:
 
 env:
   FIREBASE_PROJECT_ID: mymultiverseapp
-  FIREBASE_TOOLS_VERSION: "13.29.1"
+  FIREBASE_TOOLS_VERSION: "14.9.0"
 
 jobs:
   deploy:
@@ -61,26 +61,49 @@ jobs:
           fi
           echo "sha256=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
 
-      - name: Verify Firebase credentials
+      - name: Resolve auth strategy
+        id: auth
         env:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
           FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           if [[ -n "${FIREBASE_TOKEN}" ]]; then
-            echo "Using FIREBASE_TOKEN secret for deploy."
-            exit 0
-          fi
-          if [[ -z "${FIREBASE_SERVICE_ACCOUNT_JSON}" && -z "${FIREBASE_SERVICE_ACCOUNT_JSON_BASE64}" ]]; then
+            echo "strategy=token" >> "$GITHUB_OUTPUT"
+          elif [[ -n "${FIREBASE_SERVICE_ACCOUNT_JSON}" ]]; then
+            echo "strategy=adc_json" >> "$GITHUB_OUTPUT"
+          elif [[ -n "${FIREBASE_SERVICE_ACCOUNT_JSON_BASE64}" ]]; then
+            echo "strategy=adc_base64" >> "$GITHUB_OUTPUT"
+          else
             echo "Set FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_SERVICE_ACCOUNT_JSON_BASE64, or FIREBASE_TOKEN." >&2
             exit 1
           fi
+
+      - name: Verify Firebase credentials
+        if: steps.auth.outputs.strategy != 'token'
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: |
           pip install -q google-auth requests
           python3 scripts/firebase-credentials.py verify
+
+      - name: Authenticate to Google Cloud
+        if: steps.auth.outputs.strategy == 'adc_json'
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          cleanup_credentials: false
+
+      - name: Prepare service account file (base64 secret)
+        if: steps.auth.outputs.strategy == 'adc_base64'
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: |
+          pip install -q google-auth requests
           creds_path="$(python3 scripts/firebase-credentials.py write)"
           chmod 600 "${creds_path}"
           echo "GOOGLE_APPLICATION_CREDENTIALS=${creds_path}" >> "$GITHUB_ENV"
-          echo "Service account file ready for Firebase CLI."
 
       - name: Install Firebase CLI
         run: npm install -g "firebase-tools@${{ env.FIREBASE_TOOLS_VERSION }}"
