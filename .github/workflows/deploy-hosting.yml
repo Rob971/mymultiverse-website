@@ -63,6 +63,17 @@ jobs:
             echo "FIREBASE_SERVICE_ACCOUNT_JSON secret is required." >&2
             exit 1
           fi
+          printf '%s' "${FIREBASE_SERVICE_ACCOUNT_JSON}" | python3 -c "
+          import json, sys
+          json.load(sys.stdin)
+          print('Firebase service account JSON is valid')
+          "
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          cleanup_credentials: false
 
       - name: Deploy
         env:
