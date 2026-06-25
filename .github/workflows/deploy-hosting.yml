@@ -55,26 +55,21 @@ jobs:
           fi
           echo "sha256=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
 
-      - name: Generate App Links well-known files
+      - name: Deploy
         env:
           ANDROID_SHA256_FINGERPRINT: ${{ steps.fingerprint.outputs.sha256 }}
           IOS_TEAM_ID: ${{ inputs.ios_team_id }}
+          FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
+          FIREBASE_TOOLS_VERSION: ${{ env.FIREBASE_TOOLS_VERSION }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          SKIP_VERIFY: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_verify) && '1' || '0' }}
         run: |
-          chmod +x ./scripts/generate-well-known.sh
-          ./scripts/generate-well-known.sh
-
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          projectId: ${{ env.FIREBASE_PROJECT_ID }}
-          channelId: live
-
-      - name: Verify live site
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_verify) }}
-        run: |
-          chmod +x ./scripts/verify-hosting.sh
-          ./scripts/verify-hosting.sh
+          if [[ -z "${FIREBASE_SERVICE_ACCOUNT_JSON}" ]]; then
+            echo "FIREBASE_SERVICE_ACCOUNT_JSON secret is required." >&2
+            exit 1
+          fi
+          chmod +x ./scripts/deploy.sh
+          ./scripts/deploy.sh
 
       - name: Summary
         if: always()
