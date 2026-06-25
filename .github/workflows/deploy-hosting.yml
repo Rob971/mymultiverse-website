@@ -56,8 +56,10 @@ jobs:
           echo "sha256=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
 
       - name: Require Firebase credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
         run: |
-          if [[ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}" ]]; then
+          if [[ -z "${FIREBASE_SERVICE_ACCOUNT_JSON}" ]]; then
             echo "FIREBASE_SERVICE_ACCOUNT_JSON secret is required." >&2
             exit 1
           fi
