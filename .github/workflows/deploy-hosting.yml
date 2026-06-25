@@ -1,0 +1,85 @@
+name: Deploy hosting
+
+on:
+  workflow_dispatch:
+    inputs:
+      android_sha256_fingerprint:
+        description: "SHA-256 fingerprint (colon-free). Leave empty to use ANDROID_SHA256_FINGERPRINT secret."
+        required: false
+        type: string
+      ios_team_id:
+        description: "Optional Apple Team ID for iOS Universal Links"
+        required: false
+        type: string
+      skip_verify:
+        description: "Skip post-deploy curl verification"
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - "firebase.json"
+      - "scripts/**"
+      - ".github/workflows/deploy-hosting.yml"
+
+permissions:
+  contents: read
+
+env:
+  FIREBASE_PROJECT_ID: mymultiverseapp
+  FIREBASE_TOOLS_VERSION: "13.29.1"
+
+jobs:
+  deploy:
+    name: Deploy to Firebase Hosting
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve Android SHA-256 fingerprint
+        id: fingerprint
+        env:
+          INPUT_FINGERPRINT: ${{ inputs.android_sha256_fingerprint }}
+          SECRET_FINGERPRINT: ${{ secrets.ANDROID_SHA256_FINGERPRINT }}
+        run: |
+          FINGERPRINT="${INPUT_FINGERPRINT:-${SECRET_FINGERPRINT:-}}"
+          if [[ -z "${FINGERPRINT}" ]]; then
+            echo "Set workflow input android_sha256_fingerprint or repo secret ANDROID_SHA256_FINGERPRINT." >&2
+            echo "From MyMultiverseApp: scripts/print-android-apk-fingerprint.sh <apk>" >&2
+            exit 1
+          fi
+          echo "sha256=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
+
+      - name: Require Firebase credentials
+        run: |
+          if [[ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}" ]]; then
+            echo "FIREBASE_SERVICE_ACCOUNT_JSON secret is required." >&2
+            exit 1
+          fi
+
+      - name: Deploy
+        env:
+          ANDROID_SHA256_FINGERPRINT: ${{ steps.fingerprint.outputs.sha256 }}
+          IOS_TEAM_ID: ${{ inputs.ios_team_id }}
+          FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
+          FIREBASE_TOOLS_VERSION: ${{ env.FIREBASE_TOOLS_VERSION }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          SKIP_VERIFY: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_verify) && '1' || '0' }}
+        run: |
+          chmod +x ./scripts/deploy.sh
+          ./scripts/deploy.sh
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Firebase Hosting"
+            echo
+            echo "- Site: https://mymultiverse.app"
+            echo "- Verify: \`./scripts/verify-hosting.sh\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — MyMultiverse</title>
+  <meta name="description" content="Contact MyMultiverse for product support, business inquiries, and privacy requests regarding Ammò and other products." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles/site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-logo" href="/">
+        <span class="site-logo__name">MyMultiverse</span>
+        <span class="site-logo__tagline">Founder-led software studio</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="site-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/products/ammo/">Ammò</a></li>
+          <li><a href="/contact/" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <h1 class="page-title">Contact</h1>
+      <p class="page-meta">We read every message and aim to reply within a few business days.</p>
+
+      <div class="contact-card" style="margin-bottom: 20px;">
+        <h2>General &amp; business inquiries</h2>
+        <p>For collaboration, engineering questions, or company matters:</p>
+        <p><a class="contact-email" href="mailto:roberto.cornano@mymultiverse.app">roberto.cornano@mymultiverse.app</a></p>
+      </div>
+
+      <div class="contact-card">
+        <h2>Ammò product support</h2>
+        <p>For help with the Ammò app — accounts, households, invites, or bugs — use the same address and include <strong>Ammò</strong> in the subject line so we can route it quickly.</p>
+        <p><a class="contact-email" href="mailto:roberto.cornano@mymultiverse.app?subject=Amm%C3%B2%20support">roberto.cornano@mymultiverse.app</a></p>
+        <p style="margin-top: 16px; font-size: 0.875rem;">
+          Privacy-related requests (export or delete your account) can also be sent here. Account deletion is available inside the Ammò app settings.
+        </p>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 0.9375rem; color: var(--ink-muted);">
+        See our <a href="/privacy/">Privacy Policy</a> and <a href="/terms/">Terms of Service</a> for how we handle data and use of our products.
+      </p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <ul class="site-footer__nav">
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <p class="site-footer__product">Ammò is a product of MyMultiverse</p>
+      <p class="site-footer__copy">&copy; <span id="year"></span> MyMultiverse. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

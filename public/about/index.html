@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — MyMultiverse</title>
+  <meta name="description" content="MyMultiverse is a founder-led software studio. Learn about our story, values, and the engineering behind products like Ammò." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles/site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-logo" href="/">
+        <span class="site-logo__name">MyMultiverse</span>
+        <span class="site-logo__tagline">Founder-led software studio</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="site-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/" aria-current="page">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/products/ammo/">Ammò</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <h1 class="page-title">About MyMultiverse</h1>
+      <p class="page-meta">A small studio with a long engineering track record</p>
+
+      <div class="prose">
+        <h2>Why we exist</h2>
+        <p>
+          MyMultiverse was founded to build software that fits real households and teams — tools that are reliable, respectful of privacy, and pleasant to use every day. We are not a hype-driven agency; we are a focused studio that ships products and systems we stand behind.
+        </p>
+
+        <h2>Founder-led engineering</h2>
+        <p>
+          Roberto Cornano leads design and implementation. With 14 years of professional Java development, he has delivered web applications, microservice backends, mobile clients, and the automation that keeps them running in production.
+        </p>
+        <p>
+          That experience shapes how MyMultiverse works: explicit architecture, tested code paths, and infrastructure choices that balance speed with maintainability.
+        </p>
+
+        <h2>Products, not projects only</h2>
+        <p>
+          <a href="/products/ammo/">Ammò</a> is our first product — household nutrition logistics for shared grocery lists, meal planning, and family invites. Future apps will follow the same bar for quality, accessibility, and trust.
+        </p>
+        <p>
+          MyMultiverse also takes on selective engineering work where there is a strong fit. <a href="/contact/">Contact us</a> for collaboration or product inquiries.
+        </p>
+
+        <h2>Values</h2>
+        <ul>
+          <li><strong>Clarity</strong> — readable code, honest documentation, plain-language policies</li>
+          <li><strong>Resilience</strong> — offline-capable apps and operable backends</li>
+          <li><strong>Respect</strong> — user data stays user-controlled; we do not sell personal information to advertisers</li>
+          <li><strong>Craft</strong> — design systems, localization, and attention to detail in every release</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <ul class="site-footer__nav">
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <p class="site-footer__product">Ammò is a product of MyMultiverse</p>
+      <p class="site-footer__copy">&copy; <span id="year"></span> MyMultiverse. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

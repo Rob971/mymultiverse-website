@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Work — MyMultiverse</title>
+  <meta name="description" content="Capabilities and products from MyMultiverse: web applications, microservices, Kotlin Multiplatform mobile, CI/CD, and Ammò for household nutrition." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles/site.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-logo" href="/">
+        <span class="site-logo__name">MyMultiverse</span>
+        <span class="site-logo__tagline">Founder-led software studio</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="site-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/" aria-current="page">Work</a></li>
+          <li><a href="/products/ammo/">Ammò</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container container--wide">
+      <h1 class="page-title">Work</h1>
+      <p class="page-meta">What we build and how we deliver it</p>
+
+      <section class="section">
+        <p class="section__label">Capabilities</p>
+        <h2>End-to-end engineering</h2>
+        <p>MyMultiverse combines product thinking with hands-on implementation across the layers that matter for durable software.</p>
+        <ul class="cap-list">
+          <li>
+            <strong>Web applications</strong>
+            <span>Modern UIs, REST and RPC APIs, authentication, and role-based access.</span>
+          </li>
+          <li>
+            <strong>Microservices &amp; backends</strong>
+            <span>JVM services, event-driven workflows, Postgres with row-level security.</span>
+          </li>
+          <li>
+            <strong>Mobile (KMP)</strong>
+            <span>Kotlin Multiplatform with Compose Multiplatform for Android and iOS.</span>
+          </li>
+          <li>
+            <strong>DevOps &amp; CI/CD</strong>
+            <span>Gradle pipelines, Firebase hosting and distribution, automated verification.</span>
+          </li>
+          <li>
+            <strong>Security &amp; compliance</strong>
+            <span>Privacy policies, OAuth integrations, and accountable data handling.</span>
+          </li>
+          <li>
+            <strong>UX &amp; design systems</strong>
+            <span>Consistent components, dark theme, wide layouts, and accessible patterns.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" id="products">
+        <p class="section__label">Products</p>
+        <h2>From MyMultiverse</h2>
+        <p>Each product gets its own page as we grow the portfolio. Ammò is first; more cards will appear here over time.</p>
+        <div class="card-grid card-grid--2">
+          <article class="card">
+            <span class="card__badge">Household nutrition</span>
+            <h3>Ammò</h3>
+            <p>Shared grocery lists, weekly meal plans, household invites, and a local AI assistant — built for families who cook together.</p>
+            <a class="btn btn--primary" href="/products/ammo/">Product page</a>
+          </article>
+          <article class="card card--muted">
+            <span class="card__badge">TBD</span>
+            <h3>Next product</h3>
+            <p>We are exploring additional apps for families and small teams. Structure is ready — content will follow when we are ready to announce.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="section__label">Collaborate</p>
+        <h2>Working with us</h2>
+        <p>We take on a limited amount of contract and advisory work when there is alignment on quality and scope. Reach out via the <a href="/contact/">contact page</a>.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <ul class="site-footer__nav">
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <p class="site-footer__product">Ammò is a product of MyMultiverse</p>
+      <p class="site-footer__copy">&copy; <span id="year"></span> MyMultiverse. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
