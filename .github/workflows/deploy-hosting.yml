@@ -55,6 +55,23 @@ jobs:
           fi
           echo "sha256=${FINGERPRINT}" >> "$GITHUB_OUTPUT"
 
+      - name: Verify Firebase credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          if [[ -n "${FIREBASE_TOKEN}" ]]; then
+            echo "Using FIREBASE_TOKEN secret for deploy."
+            exit 0
+          fi
+          if [[ -z "${FIREBASE_SERVICE_ACCOUNT_JSON}" && -z "${FIREBASE_SERVICE_ACCOUNT_JSON_BASE64}" ]]; then
+            echo "Set FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_SERVICE_ACCOUNT_JSON_BASE64, or FIREBASE_TOKEN." >&2
+            exit 1
+          fi
+          pip install -q google-auth requests
+          python3 scripts/firebase-credentials.py verify
+
       - name: Deploy
         env:
           ANDROID_SHA256_FINGERPRINT: ${{ steps.fingerprint.outputs.sha256 }}
@@ -62,12 +79,10 @@ jobs:
           FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
           FIREBASE_TOOLS_VERSION: ${{ env.FIREBASE_TOOLS_VERSION }}
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           SKIP_VERIFY: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_verify) && '1' || '0' }}
         run: |
-          if [[ -z "${FIREBASE_SERVICE_ACCOUNT_JSON}" ]]; then
-            echo "FIREBASE_SERVICE_ACCOUNT_JSON secret is required." >&2
-            exit 1
-          fi
           chmod +x ./scripts/deploy.sh
           ./scripts/deploy.sh
 

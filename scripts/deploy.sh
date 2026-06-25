@@ -37,12 +37,11 @@ if [[ -z "${ANDROID_SHA256}" ]]; then
 fi
 
 if [[ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]]; then
-  if [[ -n "${FIREBASE_SERVICE_ACCOUNT_JSON:-}" ]]; then
-    CREDS_TEMP="$(mktemp)"
-    printf '%s' "${FIREBASE_SERVICE_ACCOUNT_JSON}" > "${CREDS_TEMP}"
+  if [[ -n "${FIREBASE_SERVICE_ACCOUNT_JSON:-}" || -n "${FIREBASE_SERVICE_ACCOUNT_JSON_BASE64:-}" ]]; then
+    CREDS_TEMP="$(python3 ./scripts/firebase-credentials.py write)"
     export GOOGLE_APPLICATION_CREDENTIALS="${CREDS_TEMP}"
   else
-    echo "ERROR: set GOOGLE_APPLICATION_CREDENTIALS or FIREBASE_SERVICE_ACCOUNT_JSON" >&2
+    echo "ERROR: set GOOGLE_APPLICATION_CREDENTIALS, FIREBASE_SERVICE_ACCOUNT_JSON, or FIREBASE_TOKEN" >&2
     exit 1
   fi
 fi
@@ -56,6 +55,9 @@ fi
 ./scripts/generate-well-known.sh
 
 echo "==> Deploying Firebase Hosting (project ${FIREBASE_PROJECT})"
+if [[ -n "${FIREBASE_TOKEN:-}" ]]; then
+  export FIREBASE_TOKEN
+fi
 npx -y "firebase-tools@${FIREBASE_TOOLS_VERSION}" deploy --only hosting --project "${FIREBASE_PROJECT}"
 
 if [[ "${SKIP_VERIFY:-0}" != "1" ]]; then
