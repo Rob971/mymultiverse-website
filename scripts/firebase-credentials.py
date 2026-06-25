@@ -74,6 +74,25 @@ def verify() -> None:
     print(f"OAuth token OK for {data['client_email']}")
 
 
+def access_token() -> str:
+    data = load_service_account_dict()
+    try:
+        from google.auth.transport.requests import Request
+        from google.oauth2 import service_account
+    except ImportError as exc:
+        raise SystemExit(
+            "Install google-auth and requests to mint access tokens "
+            "(pip install google-auth requests)."
+        ) from exc
+
+    creds = service_account.Credentials.from_service_account_info(
+        data,
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
+    creds.refresh(Request())
+    return creds.token
+
+
 def main() -> None:
     command = sys.argv[1] if len(sys.argv) > 1 else "write"
     if command == "write":
@@ -81,6 +100,9 @@ def main() -> None:
         return
     if command == "verify":
         verify()
+        return
+    if command == "token":
+        print(access_token())
         return
     raise SystemExit(f"Unknown command: {command}")
 
