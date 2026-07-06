@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.mymultiverse.ammo",
+      "sha256_cert_fingerprints": [
+        "BFDCB9F6AE555E41AE12484737AA9E09AF9626A345E7D1660DD02F74C44A75B3"
+      ]
+    }
+  }
+]

@@ -577,6 +577,13 @@ main {
   color: var(--ink-subtle);
 }
 
+.site-footer__marks {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: var(--ink-subtle);
+  letter-spacing: 0.02em;
+}
+
 .site-footer__copy {
   margin: 0;
   font-size: 0.8125rem;
