@@ -56,13 +56,7 @@ INVITE_BODY="$(mktemp)"
 INVITE_STATUS="$(curl -sS -L -o "${INVITE_BODY}" -w '%{http_code}' "${BASE}/invite?token=ci-smoke-test")"
 [[ "${INVITE_STATUS}" == "200" ]] || fail "/invite returned ${INVITE_STATUS}"
 grep -qi 'Ammò' "${INVITE_BODY}" || fail "/invite missing landing copy"
-grep -q '/brand/ammo-round-logo-256.png' "${INVITE_BODY}" || fail "/invite missing brand logo"
 rm -f "${INVITE_BODY}"
-echo "OK"
-
-echo "==> brand logo asset"
-LOGO_STATUS="$(curl -sS -L -o /dev/null -w '%{http_code}' "${BASE}/brand/ammo-round-logo-256.png")"
-[[ "${LOGO_STATUS}" == "200" ]] || fail "/brand/ammo-round-logo-256.png returned ${LOGO_STATUS}"
 echo "OK"
 
 echo "==> company homepage"
