@@ -80,7 +80,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
 
 ## App coupling
 
-`public/.well-known/assetlinks.json` must match the **signing certificate** of the Ammò Android app (`app.mymultiverse.kmp`). When you change debug/release keystores:
+`public/.well-known/assetlinks.json` must match the **signing certificate** of the Ammò Android app (`app.mymultiverse.ammo`). When you change debug/release keystores:
 
 1. Re-run `print-android-apk-fingerprint.sh` in **MyMultiverseApp**
 2. Update `ANDROID_SHA256_FINGERPRINT` secret here (or pass to workflow_dispatch)

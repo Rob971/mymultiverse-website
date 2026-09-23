@@ -115,6 +115,8 @@ jobs:
       - name: Deploy
         env:
           ANDROID_SHA256_FINGERPRINT: ${{ steps.fingerprint.outputs.sha256 }}
+          ANDROID_PACKAGE_NAME: app.mymultiverse.ammo
+          EXPECTED_SHA256_FINGERPRINT: ${{ steps.fingerprint.outputs.sha256 }}
           IOS_TEAM_ID: ${{ inputs.ios_team_id }}
           FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
           FIREBASE_TOOLS_VERSION: ${{ env.FIREBASE_TOOLS_VERSION }}

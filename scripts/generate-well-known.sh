@@ -7,7 +7,7 @@
 #
 # Optional:
 #   IOS_TEAM_ID — Apple Team ID for iOS Universal Links
-#   ANDROID_PACKAGE_NAME (default app.mymultiverse.kmp)
+#   ANDROID_PACKAGE_NAME (default app.mymultiverse.ammo)
 #   IOS_BUNDLE_ID (default app.mymultiverse.kmp)
 
 set -euo pipefail
@@ -17,7 +17,7 @@ OUT_DIR="${ROOT_DIR}/public/.well-known"
 
 ANDROID_SHA256="${ANDROID_SHA256_FINGERPRINT:-${ANDROID_RELEASE_SHA256:-}}"
 IOS_TEAM_ID="${IOS_TEAM_ID:-}"
-ANDROID_PACKAGE="${ANDROID_PACKAGE_NAME:-app.mymultiverse.kmp}"
+ANDROID_PACKAGE="${ANDROID_PACKAGE_NAME:-app.mymultiverse.ammo}"
 IOS_BUNDLE="${IOS_BUNDLE_ID:-app.mymultiverse.kmp}"
 
 if [[ -z "${ANDROID_SHA256}" ]]; then
@@ -33,7 +33,7 @@ mkdir -p "${OUT_DIR}"
 cat > "${OUT_DIR}/assetlinks.json" <<EOF
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.get_login_creds"],
     "target": {
       "namespace": "android_app",
       "package_name": "${ANDROID_PACKAGE}",

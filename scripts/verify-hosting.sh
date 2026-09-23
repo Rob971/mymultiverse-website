@@ -22,9 +22,15 @@ ASSET_BODY="$(mktemp)"
 ASSET_STATUS="$(curl_well_known "/.well-known/assetlinks.json" "${ASSET_BODY}")"
 [[ "${ASSET_STATUS}" == "200" ]] || fail "assetlinks.json returned ${ASSET_STATUS}"
 grep -q 'delegate_permission/common.handle_all_urls' "${ASSET_BODY}" || fail "assetlinks.json missing relation"
-grep -q 'app.mymultiverse.kmp' "${ASSET_BODY}" || fail "assetlinks.json missing package_name"
+grep -q 'delegate_permission/common.get_login_creds' "${ASSET_BODY}" || fail "assetlinks.json missing credential-sharing relation"
+grep -q 'app.mymultiverse.ammo' "${ASSET_BODY}" || fail "assetlinks.json missing package_name"
 if grep -q 'REPLACE_WITH_RELEASE_SHA256_FINGERPRINT' "${ASSET_BODY}"; then
   fail "assetlinks.json still contains placeholder fingerprint"
+fi
+if [[ -n "${EXPECTED_SHA256_FINGERPRINT:-}" ]]; then
+  EXPECTED="${EXPECTED_SHA256_FINGERPRINT//:/}"
+  EXPECTED="$(echo "${EXPECTED}" | tr '[:lower:]' '[:upper:]')"
+  grep -q "${EXPECTED}" "${ASSET_BODY}" || fail "assetlinks.json missing expected fingerprint ${EXPECTED}"
 fi
 rm -f "${ASSET_BODY}"
 echo "OK"
@@ -50,7 +56,13 @@ INVITE_BODY="$(mktemp)"
 INVITE_STATUS="$(curl -sS -L -o "${INVITE_BODY}" -w '%{http_code}' "${BASE}/invite?token=ci-smoke-test")"
 [[ "${INVITE_STATUS}" == "200" ]] || fail "/invite returned ${INVITE_STATUS}"
 grep -qi 'Ammò' "${INVITE_BODY}" || fail "/invite missing landing copy"
+grep -q '/brand/ammo-round-logo-256.png' "${INVITE_BODY}" || fail "/invite missing brand logo"
 rm -f "${INVITE_BODY}"
+echo "OK"
+
+echo "==> brand logo asset"
+LOGO_STATUS="$(curl -sS -L -o /dev/null -w '%{http_code}' "${BASE}/brand/ammo-round-logo-256.png")"
+[[ "${LOGO_STATUS}" == "200" ]] || fail "/brand/ammo-round-logo-256.png returned ${LOGO_STATUS}"
 echo "OK"
 
 echo "==> company homepage"
