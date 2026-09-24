@@ -27,9 +27,11 @@ grep -q 'app.mymultiverse.ammo' "${ASSET_BODY}" || fail "assetlinks.json missing
 if grep -q 'REPLACE_WITH_RELEASE_SHA256_FINGERPRINT' "${ASSET_BODY}"; then
   fail "assetlinks.json still contains placeholder fingerprint"
 fi
+grep -Eq '"([0-9A-F]{2}:){31}[0-9A-F]{2}"' "${ASSET_BODY}" || fail "assetlinks.json has no correctly formatted SHA-256 fingerprint"
 if [[ -n "${EXPECTED_SHA256_FINGERPRINT:-}" ]]; then
   EXPECTED="${EXPECTED_SHA256_FINGERPRINT//:/}"
   EXPECTED="$(echo "${EXPECTED}" | tr '[:lower:]' '[:upper:]')"
+  EXPECTED="$(echo "${EXPECTED}" | sed 's/../&:/g; s/:$//')"
   grep -q "${EXPECTED}" "${ASSET_BODY}" || fail "assetlinks.json missing expected fingerprint ${EXPECTED}"
 fi
 rm -f "${ASSET_BODY}"

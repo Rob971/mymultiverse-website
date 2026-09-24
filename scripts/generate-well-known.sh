@@ -27,6 +27,11 @@ fi
 
 ANDROID_SHA256="${ANDROID_SHA256//:/}"
 ANDROID_SHA256="$(echo "${ANDROID_SHA256}" | tr '[:lower:]' '[:upper:]')"
+if [[ ! "${ANDROID_SHA256}" =~ ^[0-9A-F]{64}$ ]]; then
+  echo "ERROR: Android SHA-256 must contain exactly 64 hexadecimal characters" >&2
+  exit 1
+fi
+ANDROID_SHA256="$(echo "${ANDROID_SHA256}" | sed 's/../&:/g; s/:$//')"
 
 mkdir -p "${OUT_DIR}"
 
